@@ -1,61 +1,55 @@
-###################################################################
-# SECURITY GROUPS
-###################################################################
+resource "aws_elasticache_parameter_group" "main" {
+  count       = length(var.parameters) > 0 ? 1 : 0
+  description = "Parameter group for ${var.replication_group_id}"
+  family      = "redis${replace(var.engine_version, "/\\.[\\d]+$/", "")}" # Strip the patch version.
+  name        = var.cluster_id
 
-#
-# Create the single security group to manage traffic to ElastiCache.
-#
-resource "aws_security_group" "cache_sg" {
-  name   = "${var.environment}-${var.app_name}-cache-sg"
-  vpc_id = var.vpc_id
+  dynamic "parameter" {
+    for_each = var.parameters
+    content {
+      name  = parameter.value.name
+      value = parameter.value.value
+    }
+  }
 
-  tags = {
-    Application = var.app_name
-    Billing     = var.environment
-    Environment = var.environment
-    Name        = "${var.environment}-${var.app_name}-cache-sg"
-    Terraform   = true
+  lifecycle {
+    create_before_destroy = false
   }
 }
 
-#
-# Create all of the rules for this security group.
-#
-resource "aws_security_group_rule" "cache_egress_all" {
-  cidr_blocks       = ["0.0.0.0/0"]
-  from_port         = 0
-  protocol          = "-1"
-  security_group_id = aws_security_group.cache_sg.id
-  to_port           = 0
-  type              = "egress"
+resource "aws_elasticache_subnet_group" "main" {
+  name       = var.replication_group_id
+  subnet_ids = var.subnet_ids
 }
 
-resource "aws_security_group_rule" "cache_ingress_redis" {
-  cidr_blocks       = [var.ingress_cidr_block]
-  from_port         = 6379
-  protocol          = "-1"
-  security_group_id = aws_security_group.cache_sg.id
-  to_port           = 6379
-  type              = "ingress"
-}
-
-###################################################################
-# REDIS
-###################################################################
-
-resource "aws_elasticache_subnet_group" "redis" {
-  name       = "${var.environment}-${var.app_name}"
-  subnet_ids = var.private_subnets
-}
-
-resource "aws_elasticache_replication_group" "redis" {
+resource "aws_elasticache_replication_group" "main" {
+  apply_immediately             = var.apply_immediately
+  at_rest_encryption_enabled    = var.at_rest_encryption_enabled
+  auth_token                    = var.auth_token
+  auto_minor_version_upgrade    = var.auto_minor_version_upgrade
+  automatic_failover_enabled    = var.automatic_failover_enabled
+  availability_zones            = var.availability_zones
+  cluster_mode                  = var.cluster_mode
   engine                        = "redis"
-  node_type                     = "cache.t2.micro"
-  number_cache_clusters         = 1
-  parameter_group_name          = "default.redis5.0"
-  port                          = 6379
-  replication_group_description = "Redis replica group for ${var.environment}-${var.app_name}-redis"
-  replication_group_id          = "${var.environment}-${var.app_name}-redis"
-  security_group_ids            = [aws_security_group.cache_sg.id]
-  subnet_group_name             = aws_elasticache_subnet_group.redis.name
+  engine_version                = var.engine_version
+  final_snapshot_identifier     = var.final_snapshot_identifier
+  global_replication_group_id   = var.global_replication_group_id
+  kms_key_id                    = var.kms_key_id
+  maintenance_window            = var.maintenance_window
+  multi_az_enabled              = var.multi_az_enabled
+  node_type                     = var.node_type
+  notification_topic_arn        = var.notification_topic_arn
+  number_cache_clusters         = var.number_cache_clusters
+  parameter_group_name          = length(var.parameters) > 0 ? aws_elasticache_parameter_group.main.name : var.parameter_group_name
+  port                          = var.port
+  replication_group_description = "Redis replication group for ${var.replication_group_id}"
+  replication_group_id          = var.replication_group_id
+  security_group_ids            = [aws_security_group.main.id]
+  snapshot_arns                 = var.snapshot_arns
+  snapshot_name                 = var.snapshot_name
+  snapshot_retention_limit      = var.snapshot_retention_limit
+  snapshot_window               = var.snapshot_window
+  subnet_group_name             = aws_elasticache_subnet_group.main.name
+  tags                          = merge(var.tags, { Name = var.replication_group_id })
+  transit_encryption_enabled    = var.transit_encryption_enabled
 }
