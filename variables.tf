@@ -1,3 +1,9 @@
+variable "additional_security_groups" {
+  default     = []
+  description = "A list of Security Group IDs to allow access to."
+  type        = string
+}
+
 variable "alarm_actions" {
   default     = []
   description = "Alarm action list"
@@ -20,12 +26,6 @@ variable "allowed_cidrs" {
   default     = []
   description = "A list of CIDRs to allow access to."
   type        = list(string)
-}
-
-variable "additional_security_groups" {
-  default     = []
-  description = "A list of Security Group IDs to allow access to."
-  type        = string
 }
 
 variable "apply_immediately" {
@@ -58,7 +58,6 @@ variable "automatic_failover_enabled" {
   type        = bool
 }
 
-
 variable "availability_zones" {
   default     = []
   description = "A list of EC2 availability zones in which the replication group's cache clusters will be created. The order of the availability zones in the list is not important."
@@ -69,6 +68,12 @@ variable "cluster_mode" {
   default     = false
   description = "Create a native Redis cluster. automatic_failover_enabled must be set to true. Note that enabling this does not enable cluster mode, i.e., data sharding, which requires using a parameter group that has the parameter cluster-enabled set to true."
   type        = bool
+}
+
+variable "domain_name" {
+  default     = null
+  description = "The domain name used in Route 53 CNAME entrires."
+  type        = string
 }
 
 variable "engine_version" {
@@ -108,7 +113,7 @@ variable "multi_az_enabled" {
 }
 
 variable "node_type" {
-  default     = "cache.t2.small"
+  default     = "cache.t4g.micro"
   description = "The instance class used."
   type        = string
 }
@@ -197,5 +202,11 @@ variable "transit_encryption_enabled" {
 
 variable "vpc_id" {
   description = "Required. ID of the VPC in which this cluster is provisioned."
+  type        = string
+}
+
+variable "zone_id" {
+  default     = null
+  description = "The zone ID in which Route 53 entries are created."
   type        = string
 }
