@@ -56,11 +56,6 @@ variable "environment" {
   type        = string
 }
 
-variable "internal_dns_zone_id" {
-  description = "Internal dns zone id"
-  type        = string
-}
-
 variable "maintenance_window" {
   default     = "fri:08:00-fri:09:00"
   description = "Specifies the weekly time range for when maintenance on the cache cluster is performed. The format is ddd:hh24:mi-ddd:hh24:mi (24H Clock UTC). The minimum maintenance window is a 60 minute period"
