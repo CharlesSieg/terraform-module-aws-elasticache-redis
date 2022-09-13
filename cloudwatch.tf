@@ -7,7 +7,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
   alarm_description   = "Redis cluster CPU utilization"
   alarm_name          = "${local.cluster_id}-cpu-utilization"
   comparison_operator = "GreaterThanThreshold"
-  depends_on          = [aws_elasticache_replication_group.main]
+  depends_on          = [aws_elasticache_replication_group.this]
   evaluation_periods  = 1
   metric_name         = "CPUUtilization"
   namespace           = "AWS/ElastiCache"
@@ -27,7 +27,7 @@ resource "aws_cloudwatch_metric_alarm" "cache_memory" {
   alarm_description   = "Average memory usage over last 5 minutes higher than ${var.alarm_memory_threshold_percentage}"
   alarm_name          = "${local.cluster_id}-memory-usage"
   comparison_operator = "GreaterThanThreshold"
-  depends_on          = [aws_elasticache_replication_group.main]
+  depends_on          = [aws_elasticache_replication_group.this]
   evaluation_periods  = 1
   metric_name         = "DatabaseMemoryUsagePercentage"
   namespace           = "AWS/ElastiCache"

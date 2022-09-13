@@ -68,7 +68,7 @@ variable "name_prefix" {
 }
 
 variable "node_type" {
-  default     = "cache.t2.small"
+  default     = "cache.t4g.small"
   description = "Instance type for the redis cluster that is used to store VC5 session state."
   type        = string
 }
