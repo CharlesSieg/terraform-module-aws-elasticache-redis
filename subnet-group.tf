@@ -1,4 +1,4 @@
-resource "aws_elasticache_subnet_group" "main" {
+resource "aws_elasticache_subnet_group" "this" {
   name       = "${local.cluster_id}-subnet-grp"
   provider   = aws.elasticache
   subnet_ids = var.subnets
