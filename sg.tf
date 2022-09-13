@@ -2,11 +2,8 @@ resource "aws_security_group" "this" {
   description = "ElastiCache security group for ${local.cluster_id}."
   name        = "${local.cluster_id}-sg"
   provider    = aws.elasticache
+  tags        = merge(var.tags, { Name = "${local.cluster_id}-sg" })
   vpc_id      = var.vpc_id
-
-  tags = merge(var.tags, {
-    Name = "${local.cluster_id}-sg"
-  })
 }
 
 resource "aws_security_group_rule" "ingress_security_groups" {

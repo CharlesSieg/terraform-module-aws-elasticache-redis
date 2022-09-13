@@ -51,11 +51,6 @@ variable "engine_version" {
   type        = string
 }
 
-variable "environment" {
-  description = "env to deploy into, should typically dev/staging/prod"
-  type        = string
-}
-
 variable "maintenance_window" {
   default     = "fri:08:00-fri:09:00"
   description = "Specifies the weekly time range for when maintenance on the cache cluster is performed. The format is ddd:hh24:mi-ddd:hh24:mi (24H Clock UTC). The minimum maintenance window is a 60 minute period"
@@ -63,6 +58,11 @@ variable "maintenance_window" {
 }
 
 variable "name" {
+  description = "Name for the Redis replication group i.e. UserObject"
+  type        = string
+}
+
+variable "name_prefix" {
   description = "Name for the Redis replication group i.e. UserObject"
   type        = string
 }
