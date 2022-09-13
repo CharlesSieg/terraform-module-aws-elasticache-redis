@@ -1,9 +1,3 @@
-variable "apply_immediately" {
-  default     = true
-  description = "Specifies whether any modifications are applied immediately, or during the next maintenance window. Default is false."
-  type        = bool
-}
-
 variable "alarm_actions" {
   default     = []
   description = "Alarm action list"
@@ -22,27 +16,28 @@ variable "alarm_memory_threshold_percentage" {
   type        = number
 }
 
-variable "allowed_cidrs" {
-  default     = []
-  description = "A list of CIDR blocks to allow access to."
-  type        = list(string)
-}
-
 variable "allowed_security_groups" {
   default     = []
   description = "A list of security group ID's to allow access to."
   type        = list(string)
 }
 
-variable "availability_zones" {
-  default     = []
-  description = ""
-  type        = list(string)
+variable "apply_immediately" {
+  default     = true
+  description = "Specifies whether any modifications are applied immediately, or during the next maintenance window. Default is false."
+  type        = bool
 }
+
 variable "automatic_failover_enabled" {
   default     = true
   description = "Specifies whether a read-only replica will be automatically promoted to read/write primary if the existing primary fails."
   type        = bool
+}
+
+variable "availability_zones" {
+  default     = []
+  description = ""
+  type        = list(string)
 }
 
 variable "engine_version" {
