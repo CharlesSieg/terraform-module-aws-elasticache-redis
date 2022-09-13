@@ -96,6 +96,18 @@ variable "redis_parameters" {
   type        = list(string)
 }
 
+variable "security_group_ingress" {
+  default = [{
+    cidr_blocks = []
+    port        = 0
+  }]
+  description = "A list of ports and CIDRs to allow ingress from."
+  type = set(object({
+    cidr_blocks = list(string)
+    port        = number
+  }))
+}
+
 variable "snapshot_retention_limit" {
   default     = 0
   description = "The number of days for which ElastiCache will retain automatic cache cluster snapshots before deleting them. For example, if you set SnapshotRetentionLimit to 5, then a snapshot that was taken today will be retained for 5 days before being deleted. If the value of SnapshotRetentionLimit is set to zero (0), backups are turned off. Please note that setting a snapshot_retention_limit is not supported on cache.t1.micro or cache.t2.* cache nodes"

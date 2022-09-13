@@ -1,3 +1,3 @@
 locals {
-  cluster_id = "${var.environment}-${var.name}-cache"
+  cluster_id = "${var.name_prefix}-${var.name}-cache"
 }
